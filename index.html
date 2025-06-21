@@ -123,7 +123,7 @@
       }
       navigator.geolocation.getCurrentPosition(({coords}) => {
         const {latitude: lat, longitude: lon} = coords;
-        const apiKey = 'YOUR_API_KEY'; // insert your OpenWeatherMap API key
+        const apiKey = 'f85eb5aea47610974ffb3997c220e3fa'; // insert your OpenWeatherMap API key
         fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=${apiKey}`)
           .then(res => res.json())
           .then(data => {
