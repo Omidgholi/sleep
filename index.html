@@ -5,88 +5,84 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wake-up Time Recommender</title>
   <style>
+    :root {
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --primary: #4a90e2;
+      --secondary: #50e3c2;
+      --text-dark: #333;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
-      padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: #f0f2f5;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--text-dark);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
     }
-    .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      max-width: 360px;
       width: 90%;
-      max-width: 400px;
       text-align: center;
     }
     h1 {
-      font-size: 1.5em;
-      margin-bottom: 10px;
+      margin-top: 0;
+      font-size: 1.75rem;
+      letter-spacing: 1px;
     }
     #current-time {
-      font-weight: bold;
-    }
-    button {
-      margin-top: 15px;
-      padding: 12px 20px;
-      font-size: 1em;
-      border: none;
-      border-radius: 8px;
-      background-color: #007bff;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    button:hover {
-      background-color: #0056b3;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 8px 0 16px;
+      display: block;
     }
     ul {
       list-style: none;
       padding: 0;
-      margin-top: 15px;
+      margin: 0;
     }
     li {
-      background-color: #f8f9fa;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 8px;
+      background: #fff;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Wake-up Time Recommender</h1>
-    <p>Current time: <span id="current-time">--:--</span></p>
-    <button id="calculate">Get Wake-up Times</button>
+  <div class="card">
+    <h1>Wake-up Time</h1>
+    <span id="current-time">--:--</span>
     <ul id="results"></ul>
   </div>
   <script>
-    function pad(num) {
-      return num.toString().padStart(2, '0');
-    }
-    function formatTime(date) {
-      return pad(date.getHours()) + ':' + pad(date.getMinutes());
-    }
+    const pad = n => n.toString().padStart(2, '0');
+    const formatTime = date => `${pad(date.getHours())}:${pad(date.getMinutes())}`;
     function calculateWakeTimes() {
       const now = new Date();
       document.getElementById('current-time').textContent = formatTime(now);
-      const cycles = [6, 7.5, 9]; // hours
-      const results = document.getElementById('results');
-      results.innerHTML = '';
+      const cycles = [4.5, 6, 7.5, 9];
+      const container = document.getElementById('results');
+      container.innerHTML = '';
       cycles.forEach(hours => {
-        const wakeDate = new Date(now.getTime() + hours * 60 * 60 * 1000);
+        const wake = new Date(now.getTime() + hours * 3600000);
         const li = document.createElement('li');
-        li.textContent = formatTime(wakeDate) + ` (after ${hours}h of sleep)`;
-        results.appendChild(li);
+        li.textContent = `${formatTime(wake)} — after ${hours}h sleep`;
+        container.appendChild(li);
       });
     }
-    document.getElementById('calculate').addEventListener('click', calculateWakeTimes);
-    calculateWakeTimes();
+    window.addEventListener('load', calculateWakeTimes);
   </script>
 </body>
 </html>
