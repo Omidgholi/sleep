@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wake-up Time Recommender</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    #current-time {
+      font-weight: bold;
+    }
+    button {
+      margin-top: 15px;
+      padding: 12px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 15px;
+    }
+    li {
+      background-color: #f8f9fa;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Wake-up Time Recommender</h1>
+    <p>Current time: <span id="current-time">--:--</span></p>
+    <button id="calculate">Get Wake-up Times</button>
+    <ul id="results"></ul>
+  </div>
+  <script>
+    function pad(num) {
+      return num.toString().padStart(2, '0');
+    }
+    function formatTime(date) {
+      return pad(date.getHours()) + ':' + pad(date.getMinutes());
+    }
+    function calculateWakeTimes() {
+      const now = new Date();
+      document.getElementById('current-time').textContent = formatTime(now);
+      const cycles = [6, 7.5, 9]; // hours
+      const results = document.getElementById('results');
+      results.innerHTML = '';
+      cycles.forEach(hours => {
+        const wakeDate = new Date(now.getTime() + hours * 60 * 60 * 1000);
+        const li = document.createElement('li');
+        li.textContent = formatTime(wakeDate) + ` (after ${hours}h of sleep)`;
+        results.appendChild(li);
+      });
+    }
+    document.getElementById('calculate').addEventListener('click', calculateWakeTimes);
+    calculateWakeTimes();
+  </script>
+</body>
+</html>
