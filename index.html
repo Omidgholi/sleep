@@ -2,149 +2,141 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sleep Calculator</title>
+  <title>Wake-up Times</title>
+
+  <!-- Mobile-first essentials -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Want to wake up feeling refreshed? Get perfect wake-up times based on sleep cycles.">
+  <meta name="theme-color" content="#6a11cb">
+  <meta name="description" content="Instant sleep-cycle wake-up times—no tapping required.">
+
+  <!-- Typeface -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --grad-start: #6a11cb;
-      --grad-end: #2575fc;
-      --card-bg: rgba(255, 255, 255, 0.9);
-      --text: #2d2d2d;
-      --accent: #ffffff;
-      --shadow: rgba(0, 0, 0, 0.15);
+      --grad-start:#6a11cb;
+      --grad-end:#2575fc;
+      --card-bg:rgba(255,255,255,.92);
+      --text:#2d2d2d;
+      --shadow:rgba(0,0,0,.15);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      text-align: center;
-      padding: 16px;
+
+    /* Reset & layout */
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:'Inter',sans-serif;
+      background:linear-gradient(135deg,var(--grad-start),var(--grad-end));
+      color:var(--text);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+      padding:16px;
+      text-align:center;
     }
-    header {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-top: 24px;
+
+    header{
+      font-size:clamp(1.2rem,4vw,1.6rem);
+      font-weight:700;
+      color:#fff;
+      margin-top:24px;
+      letter-spacing:.02em;
     }
-    .card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 32px 24px;
-      box-shadow: 0 12px 24px var(--shadow);
-      width: 100%;
-      max-width: 380px;
-      margin: 24px 0;
+
+    main{
+      width:100%;
+      max-width:380px;
+      background:var(--card-bg);
+      border-radius:20px;
+      padding:32px 24px;
+      margin:32px 0;
+      box-shadow:0 12px 24px var(--shadow);
     }
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 600;
-      margin-bottom: 12px;
+
+    h1{
+      font-size:1.75rem;
+      font-weight:600;
+      margin-bottom:4px;
     }
-    #current-time {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #444;
-      margin-bottom: 8px;
+
+    #subtitle{
+      font-size:.85rem;
+      margin-bottom:20px;
+      opacity:.7;
     }
-    #weather {
-      font-size: 0.9rem;
-      margin-bottom: 16px;
-      color: #555;
+
+    #current-time{
+      font-size:1.25rem;
+      font-weight:600;
+      margin-bottom:16px;
     }
-    ul {
-      list-style: none;
+
+    ul{list-style:none}
+    li{
+      background:#fff;
+      padding:14px 16px;
+      border-radius:12px;
+      margin-bottom:14px;
+      font-size:1.1rem;
+      font-weight:500;
+      box-shadow:0 6px 12px var(--shadow);
+      opacity:0;
+      transform:translateY(10px);
+      animation:fadeInUp .5s ease forwards;
     }
-    li {
-      background: #fff;
-      padding: 14px 16px;
-      border-radius: 12px;
-      margin-bottom: 12px;
-      font-size: 1.1rem;
-      font-weight: 500;
-      box-shadow: 0 6px 12px var(--shadow);
-      opacity: 0;
-      transform: translateY(10px);
-      animation: fadeInUp 0.5s ease forwards;
+    li:nth-child(1){animation-delay:.15s}
+    li:nth-child(2){animation-delay:.3s}
+    li:nth-child(3){animation-delay:.45s}
+    li:nth-child(4){animation-delay:.6s}
+    @keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+
+    footer{
+      font-size:.75rem;
+      color:#fff;
+      margin-bottom:16px;
+      opacity:.8;
     }
-    li:nth-child(1) { animation-delay: 0.2s; }
-    li:nth-child(2) { animation-delay: 0.35s; }
-    li:nth-child(3) { animation-delay: 0.5s; }
-    li:nth-child(4) { animation-delay: 0.65s; }
-    @keyframes fadeInUp {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    footer {
-      font-size: 0.75rem;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
-    footer a { color: inherit; text-decoration: underline; }
+    footer a{color:inherit;text-decoration:underline}
   </style>
 </head>
 <body>
   <header>⏰ Sleep Calculator</header>
-  <div class="card">
-    <h1>Wake‑up Times</h1>
+
+  <main>
+    <h1>Wake-up Times</h1>
+    <div id="subtitle">Assuming ~15 min to fall asleep</div>
     <div id="current-time">--:--</div>
-    <div id="weather">
-      <div id="current-weather">Loading weather...</div>
-      <div id="tomorrow-weather"></div>
-    </div>
     <ul id="results"></ul>
-  </div>
+  </main>
+
   <footer>© 2025 Sleep Calculator | <a href="#">Terms & Privacy</a></footer>
+
   <script>
-    const pad = n => n.toString().padStart(2, '0');
-    const formatTime = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-    function calculate() {
-      const now = new Date();
-      document.getElementById('current-time').textContent = `Now: ${formatTime(now)}`;
-      const cycles = [4.5, 6, 7.5, 9];
-      const list = document.getElementById('results');
-      list.innerHTML = '';
-      cycles.forEach(c => {
-        const t = new Date(now.getTime() + c * 3600000);
-        const li = document.createElement('li');
-        li.textContent = `${formatTime(t)} (${c}h sleep)`;
+    /* Helpers */
+    const pad=n=>n.toString().padStart(2,'0');
+    const fmt=d=>`${pad(d.getHours())}:${pad(d.getMinutes())}`;
+
+    function calculate(){
+      const now=new Date();
+      document.getElementById('current-time').textContent=`Now • ${fmt(now)}`;
+      const list=document.getElementById('results');
+      list.innerHTML='';
+
+      /* 90-minute cycles + 15-minute buffer */
+      const buffer=15/60;                  // hours
+      const cycles=[3,4.5,6,7.5,9];        // hours of *sleep* (not counting buffer)
+
+      cycles.forEach(c=>{
+        const t=new Date(now.getTime()+(c+buffer)*3600000);
+        const li=document.createElement('li');
+        li.textContent=`${fmt(t)} (${c}h sleep)`;
         list.appendChild(li);
       });
     }
-    function fetchWeather() {
-      if (!navigator.geolocation) {
-        document.getElementById('current-weather').textContent = 'Geolocation not supported';
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(({coords}) => {
-        const {latitude: lat, longitude: lon} = coords;
-        const apiKey = 'f85eb5aea47610974ffb3997c220e3fa'; // insert your OpenWeatherMap API key
-        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=${apiKey}`)
-          .then(res => res.json())
-          .then(data => {
-            const cur = data.current;
-            document.getElementById('current-weather').textContent =
-              `Now: ${cur.temp.toFixed(1)}°C, Humidity: ${cur.humidity}%`;
-            const tom = data.daily[1];
-            document.getElementById('tomorrow-weather').textContent =
-              `Tomorrow: ${tom.temp.day.toFixed(1)}°C, Humidity: ${tom.humidity}%`;
-          })
-          .catch(() => {
-            document.getElementById('current-weather').textContent = 'Weather unavailable';
-          });
-      }, () => {
-        document.getElementById('current-weather').textContent = 'Location denied';
-      });
-    }
-    window.addEventListener('load', () => {
-      calculate();
-      fetchWeather();
-    });
+
+    /* Recompute every minute so times stay fresh if the page stays open */
+    calculate();
+    setInterval(calculate,60000);
   </script>
 </body>
 </html>
