@@ -5,108 +5,146 @@
   <title>Sleep Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Want to wake up feeling refreshed? Get perfect wake-up times based on sleep cycles.">
-  <meta property="og:title" content="Sleep Calculator">
-  <meta property="og:description" content="Want to wake up feeling refreshed? Get perfect wake-up times based on sleep cycles.">
-  <meta property="og:site_name" content="Sleep Calculator">
-  <meta property="og:url" content="https://<your-domain>.github.io/wake-up-recommender/">
-  <meta property="og:image" content="https://<your-domain>.github.io/wake-up-recommender/image256.png">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="icon" href="favicon.png" sizes="32x32" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" sizes="180x180">
-  <link rel="canonical" href="https://<your-domain>.github.io/wake-up-recommender/">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-gradient-start: #4a90e2;
-      --bg-gradient-end: #50e3c2;
-      --card-bg: rgba(255, 255, 255, 0.85);
-      --accent: #fff;
-      --text-dark: #333;
+      --grad-start: #6a11cb;
+      --grad-end: #2575fc;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --text: #2d2d2d;
+      --accent: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.15);
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
-      color: var(--text-dark);
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+      color: var(--text);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      text-align: center;
+      padding: 16px;
     }
     header {
-      width: 100%;
-      padding: 16px;
-      text-align: center;
-      color: var(--accent);
       font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: 1px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-top: 24px;
     }
     .card {
       background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-      max-width: 360px;
-      width: 90%;
-      text-align: center;
-      margin: auto;
+      border-radius: 20px;
+      padding: 32px 24px;
+      box-shadow: 0 12px 24px var(--shadow);
+      width: 100%;
+      max-width: 380px;
+      margin: 24px 0;
     }
     h1 {
-      margin: 0;
       font-size: 1.75rem;
-      letter-spacing: 1px;
+      font-weight: 600;
+      margin-bottom: 12px;
     }
     #current-time {
-      display: block;
-      margin: 12px 0;
       font-size: 1.25rem;
       font-weight: 600;
+      color: #444;
+      margin-bottom: 8px;
     }
-    ul { list-style: none; padding: 0; margin: 0; }
+    #weather {
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      color: #555;
+    }
+    ul {
+      list-style: none;
+    }
     li {
       background: #fff;
-      margin: 8px 0;
-      padding: 12px;
+      padding: 14px 16px;
       border-radius: 12px;
-      font-size: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      box-shadow: 0 6px 12px var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeInUp 0.5s ease forwards;
+    }
+    li:nth-child(1) { animation-delay: 0.2s; }
+    li:nth-child(2) { animation-delay: 0.35s; }
+    li:nth-child(3) { animation-delay: 0.5s; }
+    li:nth-child(4) { animation-delay: 0.65s; }
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
     }
     footer {
-      margin: 24px 0;
       font-size: 0.75rem;
       color: var(--accent);
-      text-align: center;
+      margin-bottom: 16px;
     }
+    footer a { color: inherit; text-decoration: underline; }
   </style>
 </head>
 <body>
-  <header>Sleep Calculator</header>
+  <header>⏰ Sleep Calculator</header>
   <div class="card">
-    <h1>Wake-up Times</h1>
-    <span id="current-time">--:--</span>
+    <h1>Wake‑up Times</h1>
+    <div id="current-time">--:--</div>
+    <div id="weather">
+      <div id="current-weather">Loading weather...</div>
+      <div id="tomorrow-weather"></div>
+    </div>
     <ul id="results"></ul>
   </div>
-  <footer>© 2025 Sleep Calculator | <a href="#" style="color:inherit; text-decoration:underline;">Terms & Privacy</a></footer>
+  <footer>© 2025 Sleep Calculator | <a href="#">Terms & Privacy</a></footer>
   <script>
     const pad = n => n.toString().padStart(2, '0');
-    const formatTime = date => `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    const formatTime = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
     function calculate() {
       const now = new Date();
-      document.getElementById('current-time').textContent = formatTime(now);
+      document.getElementById('current-time').textContent = `Now: ${formatTime(now)}`;
       const cycles = [4.5, 6, 7.5, 9];
-      const out = document.getElementById('results'); out.innerHTML = '';
-      cycles.forEach(h => {
-        const t = new Date(now.getTime() + h * 3600000);
+      const list = document.getElementById('results');
+      list.innerHTML = '';
+      cycles.forEach(c => {
+        const t = new Date(now.getTime() + c * 3600000);
         const li = document.createElement('li');
-        li.textContent = `${formatTime(t)} — after ${h}h sleep`;
-        out.appendChild(li);
+        li.textContent = `${formatTime(t)} (${c}h sleep)`;
+        list.appendChild(li);
       });
     }
-    window.addEventListener('load', calculate);
+    function fetchWeather() {
+      if (!navigator.geolocation) {
+        document.getElementById('current-weather').textContent = 'Geolocation not supported';
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(({coords}) => {
+        const {latitude: lat, longitude: lon} = coords;
+        const apiKey = 'YOUR_API_KEY'; // insert your OpenWeatherMap API key
+        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly,alerts&units=metric&appid=${apiKey}`)
+          .then(res => res.json())
+          .then(data => {
+            const cur = data.current;
+            document.getElementById('current-weather').textContent =
+              `Now: ${cur.temp.toFixed(1)}°C, Humidity: ${cur.humidity}%`;
+            const tom = data.daily[1];
+            document.getElementById('tomorrow-weather').textContent =
+              `Tomorrow: ${tom.temp.day.toFixed(1)}°C, Humidity: ${tom.humidity}%`;
+          })
+          .catch(() => {
+            document.getElementById('current-weather').textContent = 'Weather unavailable';
+          });
+      }, () => {
+        document.getElementById('current-weather').textContent = 'Location denied';
+      });
+    }
+    window.addEventListener('load', () => {
+      calculate();
+      fetchWeather();
+    });
   </script>
 </body>
 </html>
